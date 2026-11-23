@@ -1,10 +1,18 @@
 # LA-ChannelStrip
 
-A console channel strip for Linux, Windows and macOS (VST3, plus LV2 / Standalone on Linux and AU on macOS): filters, gate / expander, transient shaper,
+A console channel strip for Linux, Windows and macOS: filters, gate / expander, transient shaper,
 compressor with four characters, 4-band EQ, de-esser and drive, with a **Digital / Analogue** switch.
 Digital is clean and exact. Analogue gives you the sound of a desk channel: harmonics that grow with level,
 the console's EQ curves, feedback compression, per-channel component tolerances and an optional noise floor.
 It uses the same look as LA-Trigger, LA-VocalChain, LA-AmpSuite and LA-Master.
+
+| Platform | Formats |
+|---|---|
+| Windows 10/11 (x64) | VST3 |
+| macOS 10.13+ (Apple silicon and Intel) | VST3, AU |
+| Linux (x86_64) | VST3, LV2, Standalone |
+
+Ready-to-install builds for all three are on the [Releases](https://github.com/AzoghMartins/LA-ChannelStrip/releases) page.
 
 ![LA-ChannelStrip](docs/screenshot.png)
 
