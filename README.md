@@ -1,6 +1,6 @@
 # LA-ChannelStrip
 
-A console channel strip for Linux (VST3 / LV2 / Standalone): filters, gate / expander, transient shaper,
+A console channel strip for Linux, Windows and macOS (VST3, plus LV2 / Standalone on Linux and AU on macOS): filters, gate / expander, transient shaper,
 compressor with four characters, 4-band EQ, de-esser and drive, with a **Digital / Analogue** switch.
 Digital is clean and exact. Analogue gives you the sound of a desk channel: harmonics that grow with level,
 the console's EQ curves, feedback compression, per-channel component tolerances and an optional noise floor.
@@ -92,7 +92,9 @@ features that need several instances to talk to each other (group VCA, "randomis
 Constant at 0.3 ms (15 samples at 48 kHz), from the Drive's 2x oversampling. It does not change with the mode
 or the settings and is reported to the host.
 
-## Building (Linux)
+## Building
+
+### Linux
 
 ```bash
 sudo apt install build-essential cmake ninja-build libasound2-dev libx11-dev libxrandr-dev \
@@ -115,7 +117,44 @@ Options:
 
 To use the external key, enable the plugin's side-chain input in your host and route a track to it.
 
-GitHub Actions builds every push and uploads a ready-to-install tarball as an artifact.
+### Windows
+
+Needs Visual Studio 2022 (the "Desktop development with C++" workload) and CMake 3.22 or newer.
+
+```powershell
+cmake -B build -G "Visual Studio 17 2022" -A x64          # downloads JUCE 8 automatically
+cmake --build build --config Release --parallel
+ctest --test-dir build -C Release --output-on-failure       # optional: run the tests
+```
+
+Install by copying `build\LAChannelStrip_artefacts\Release\VST3\LA-ChannelStrip.vst3` into `C:\Program Files\Common Files\VST3`.
+
+### macOS
+
+Needs Xcode (or the Command Line Tools) and CMake 3.22 or newer. The build is a universal binary
+(Apple silicon and Intel) and runs on macOS 10.13 or newer.
+
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Release                   # downloads JUCE 8 automatically
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure                  # optional: run the tests
+
+# install
+cp -R build/LAChannelStrip_artefacts/Release/VST3/LA-ChannelStrip.vst3 ~/Library/Audio/Plug-Ins/VST3/
+cp -R build/LAChannelStrip_artefacts/Release/AU/LA-ChannelStrip.component ~/Library/Audio/Plug-Ins/Components/
+```
+
+### Downloads
+
+GitHub Actions builds every push on Linux, Windows and macOS and uploads ready-to-install archives as
+artifacts. Tagged releases carry all three:
+
+- `LA-ChannelStrip-linux-x86_64.tar.gz`: VST3, LV2 and Standalone. Copy them into `~/.vst3` and `~/.lv2`.
+- `LA-ChannelStrip-windows-x64.zip`: VST3. Extract it into `C:\Program Files\Common Files\VST3`.
+- `LA-ChannelStrip-macos-universal.zip`: VST3 and AU. Copy them into `~/Library/Audio/Plug-Ins/VST3` and
+  `~/Library/Audio/Plug-Ins/Components`. The plugins are not notarized, so after downloading, clear the
+  quarantine flag once before starting your DAW:
+  `xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/VST3/LA-ChannelStrip.vst3 ~/Library/Audio/Plug-Ins/Components/LA-ChannelStrip.component`
 
 ## Project layout
 
