@@ -17,6 +17,7 @@ juce::Colour moduleColour (ModuleId m);
 class SpectrumDisplay : public juce::Component, public juce::SettableTooltipClient
 {
 public:
+    void paintOverChildren (juce::Graphics& g) override { Hardware::drawGlass (g, getLocalBounds().toFloat()); }
     explicit SpectrumDisplay (StripProcessor&);
 
     void pullSpectrum();
@@ -60,6 +61,7 @@ private:
 class DynamicsDisplay : public juce::Component, public juce::SettableTooltipClient
 {
 public:
+    void paintOverChildren (juce::Graphics& g) override { Hardware::drawGlass (g, getLocalBounds().toFloat()); }
     explicit DynamicsDisplay (StripProcessor&);
     void addFrame (const DynFrame& f);
     void paint (juce::Graphics&) override;
@@ -76,6 +78,7 @@ private:
 class VuMeters : public juce::Component, public juce::SettableTooltipClient
 {
 public:
+    void paintOverChildren (juce::Graphics& g) override { Hardware::drawGlass (g, getLocalBounds().toFloat()); }
     explicit VuMeters (StripProcessor&);
     void tick();
     void paint (juce::Graphics&) override;
