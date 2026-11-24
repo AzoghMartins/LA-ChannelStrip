@@ -34,7 +34,8 @@ jobs:
       - name: Package
         run: |
           cd build/LAChannelStrip_artefacts/Release
-          tar czf ../../../LA-ChannelStrip-linux-x86_64.tar.gz VST3/LA-ChannelStrip.vst3 LV2/LA-ChannelStrip.lv2 Standalone/LA-ChannelStrip
+          cp ../../../LICENSE LICENSE-LA-ChannelStrip.txt
+          tar czf ../../../LA-ChannelStrip-linux-x86_64.tar.gz VST3/LA-ChannelStrip.vst3 LV2/LA-ChannelStrip.lv2 Standalone/LA-ChannelStrip LICENSE-LA-ChannelStrip.txt
 
       - uses: actions/upload-artifact@v4
         with:
@@ -57,7 +58,9 @@ jobs:
 
       - name: Package
         shell: pwsh
-        run: Compress-Archive -Path build/LAChannelStrip_artefacts/Release/VST3/LA-ChannelStrip.vst3 -DestinationPath LA-ChannelStrip-windows-x64.zip
+        run: |
+          Copy-Item LICENSE LICENSE-LA-ChannelStrip.txt
+          Compress-Archive -Path build/LAChannelStrip_artefacts/Release/VST3/LA-ChannelStrip.vst3, LICENSE-LA-ChannelStrip.txt -DestinationPath LA-ChannelStrip-windows-x64.zip
 
       - uses: actions/upload-artifact@v4
         with:
@@ -93,7 +96,8 @@ jobs:
       - name: Package
         run: |
           cd build/LAChannelStrip_artefacts/Release
-          zip -r -y ../../../LA-ChannelStrip-macos-universal.zip VST3/LA-ChannelStrip.vst3 AU/LA-ChannelStrip.component
+          cp ../../../LICENSE LICENSE-LA-ChannelStrip.txt
+          zip -r -y ../../../LA-ChannelStrip-macos-universal.zip VST3/LA-ChannelStrip.vst3 AU/LA-ChannelStrip.component LICENSE-LA-ChannelStrip.txt
 
       - uses: actions/upload-artifact@v4
         with:
