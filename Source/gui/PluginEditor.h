@@ -56,7 +56,7 @@ private:
     std::vector<std::unique_ptr<juce::Component>> owned;
 
     // Header
-    juce::ComboBox presetBox;
+    MenuBox presetBox;
     PillButton saveButton { "SAVE" }, assistButton { "ASSIST", Colours::learn };
     PillButton digitalButton { "DIGITAL", Colours::accent }, analogueButton { "ANALOGUE", Colours::analogue };
     PillButton slotA { "A", Colours::detection }, slotB { "B", Colours::detection }, copyButton { "A > B" };

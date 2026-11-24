@@ -149,7 +149,8 @@ private:
     };
 
     void setParam (const char* id, float value);
-    void resetToDefaults();
+    /** Sets every parameter in one pass: listed ones to their value, the rest to their default. */
+    void applyParameterValues (const std::vector<std::pair<const char*, float>>& values);
     juce::ValueTree captureState();
     void restoreState (const juce::ValueTree& tree);
 
