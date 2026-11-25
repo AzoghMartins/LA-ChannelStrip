@@ -271,11 +271,26 @@ juce::String StripProcessor::finishAssist()
 }
 
 //==============================================================================
-void StripProcessor::resetToDefaults()
+void StripProcessor::applyParameterValues (const std::vector<std::pair<const char*, float>>& values)
 {
+    // One change per parameter, wrapped in a gesture. Setting everything to its default first and
+    // then to the preset value sent two competing edits per parameter, which some hosts merge or
+    // echo back out of order, leaving parts of the preset unapplied.
     for (auto* p : getParameters())
-        if (auto* rp = dynamic_cast<juce::RangedAudioParameter*> (p))
-            rp->setValueNotifyingHost (rp->getDefaultValue());
+    {
+        auto* rp = dynamic_cast<juce::RangedAudioParameter*> (p);
+        if (rp == nullptr)
+            continue;
+        float target = rp->getDefaultValue();
+        for (const auto& [id, value] : values)
+            if (rp->getParameterID() == id)
+                target = rp->convertTo0to1 (value);
+        if (std::abs (rp->getValue() - target) < 1.0e-6f)
+            continue;
+        rp->beginChangeGesture();
+        rp->setValueNotifyingHost (target);
+        rp->endChangeGesture();
+    }
 }
 
 void StripProcessor::setCurrentProgram (int index)
@@ -285,10 +300,7 @@ void StripProcessor::setCurrentProgram (int index)
         return;
     currentProgram = index;
     currentPresetName = presets[(size_t) index].name;
-    resetToDefaults();
-    for (const auto& [id, value] : presets[(size_t) index].values)
-        if (auto* p = apvts.getParameter (id))
-            p->setValueNotifyingHost (p->convertTo0to1 (value));
+    applyParameterValues (presets[(size_t) index].values);
     setModuleOrder (presets[(size_t) index].order.isEmpty() ? defaultModuleOrder()
                                                            : orderFromString (presets[(size_t) index].order.toRawUTF8()));
 }
